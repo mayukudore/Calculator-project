@@ -10,20 +10,24 @@ class Calculator{
     clearScreen(){
         this.firstInput = ''
         this.secondInput = ''
-        this.operator = undefined
+        this.operator = ''
     }
     appendNumbers(number){
-      if (this.firstInput.includes('.') && number === '.') return 
-        this.firstInput = this.firstInput.toString() + number.toString()
+      if ( number === '.' && this.firstInput.includes('.')) return; 
+      
+             this.firstInput = this.firstInput.toString() + number.toString()
+        if (this.firstInput.toString().length > 9)
+            this.firstInput = this.firstInput.substr(0,9);
+        
 
     }
 
    currentNumbers(){
        
        this.currentInput.innerText = this.firstInput
-       if (this.operator != null){
+       if (this.operator != ''){
 
-        this.previousInput.innerText = this.secondInput1    
+        this.previousInput.innerText = this.secondInput    
        }
     }
        
@@ -42,6 +46,27 @@ class Calculator{
         
        computeAnswer() {
 
+        if (this.firstInput === '') return
+        let firstNum = parseFloat(this.firstInput)
+        let secondNum = parseFloat(this.secondInput)
+        
+        let finalAnswer;
+        switch(this.operator){
+            case '+': finalAnswer = firstNum + secondNum
+            break
+            case '-': finalAnswer = secondNum - firstNum
+            break
+            case '÷': finalAnswer = firstNum / secondNum
+            break
+            case '×': finalAnswer = secondNum * firstNum
+            break
+            default: return
+            
+
+        }
+        this.firstInput = finalAnswer
+        this.secondInput = ''
+        this.operator = undefined
        }
 
 
@@ -87,9 +112,22 @@ clearScreen.addEventListener('click', () => {
  myCalculator.currentNumbers()
 
 })
-deleteNumber.addEventListener('click', () => {
+deleteNumber.addEventListener('click', button => {
 
     myCalculator.removeNumber();
+    myCalculator.currentNumbers();
+
+})
+activeOperator.forEach(operator => {
+    operator.addEventListener ('click', () =>{
+        myCalculator.chooseOperation(operator.innerText)
+        myCalculator.currentNumbers();
+    })
+})
+
+computeButton.addEventListener('click', () =>{
+    
+    myCalculator.computeAnswer();
     myCalculator.currentNumbers();
 
 })
